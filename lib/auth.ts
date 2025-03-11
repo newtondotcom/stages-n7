@@ -10,25 +10,38 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.AUTHENTIK_CLIENT_ID!,
       clientSecret: process.env.AUTHENTIK_CLIENT_SECRET!,
       issuer: process.env.AUTHENTIK_ISSUER,
-      authorization: { params: { scope: "preferred_username" } },
+      authorization: {
+        params: { scope: "openid profile email churros:profile" },
+      },
       client: {
-        token_endpoint_auth_method: "client_secret_post",
         id_token_signed_response_alg: "HS256",
+      },
+      profile(profile) {
+        console.log("profile", profile);
+        return {
+          id: profile.sub,
+          name: profile.name ?? profile.preferred_username,
+          email: profile.email,
+          image: profile.picture,
+        };
       },
     }),
   ],
   callbacks: {
     session: async ({ session, user }) => {
       if (session?.user) {
-        console.log("session.user.id", session.user);
-        session.user.name = user.id;
+        console.log("session.user", session.user);
+        session.user.name = user.name;
         // You can add more user properties to the session here if needed
       }
       return session;
     },
-  },
-  pages: {
-    signIn: "/login",
+    jwt: async ({ token, user, account, profile }) => {
+      if (user) {
+        //console.log("jwt", token, user, account, profile);
+      }
+      return token;
+    },
   },
 };
 
