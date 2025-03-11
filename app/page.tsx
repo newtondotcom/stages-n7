@@ -1,19 +1,22 @@
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Search } from "lucide-react"
-import { InternshipCard } from "@/components/internship-card"
-import { getLatestInternships } from "@/lib/internships"
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
+import { InternshipCard } from "@/components/internship-card";
+import { getLatestInternships } from "@/lib/internships";
 
 export default async function Home() {
-  const latestInternships = await getLatestInternships(5)
+  const latestInternships = await getLatestInternships(5);
 
   return (
     <div className="container mx-auto px-4 py-8">
       <section className="py-12 md:py-16 lg:py-20">
         <div className="text-center space-y-4">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tighter">ENSEEIHT Internship Platform</h1>
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tighter">
+            ENSEEIHT Internship Platform
+          </h1>
           <p className="text-xl text-muted-foreground max-w-[700px] mx-auto">
-            Discover, share, and connect with internship opportunities for ENSEEIHT students.
+            Discover, share, and connect with internship opportunities for
+            ENSEEIHT students.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Button asChild size="lg">
@@ -49,21 +52,25 @@ export default async function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="space-y-2">
             <h3 className="text-xl font-medium">Share Your Experience</h3>
-            <p className="text-muted-foreground">Document your internship details to help future students.</p>
+            <p className="text-muted-foreground">
+              Document your internship details to help future students.
+            </p>
           </div>
           <div className="space-y-2">
             <h3 className="text-xl font-medium">Find Opportunities</h3>
-            <p className="text-muted-foreground">Search through past internships to discover potential placements.</p>
+            <p className="text-muted-foreground">
+              Search through past internships to discover potential placements.
+            </p>
           </div>
           <div className="space-y-2">
             <h3 className="text-xl font-medium">Connect & Refer</h3>
             <p className="text-muted-foreground">
-              "Pistonner" new students by referring them to your previous internship.
+              Maybe the student can refer you to a company where they completed
+              their internship.
             </p>
           </div>
         </div>
       </section>
     </div>
-  )
+  );
 }
-

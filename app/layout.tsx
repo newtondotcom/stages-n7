@@ -38,7 +38,7 @@ export default function RootLayout({
               <footer className="border-t py-6">
                 <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
                   © {new Date().getFullYear()} ENSEEIHT Internship Platform •
-                  Developed by the ENSEEIHT Student Team
+                  Developed by Robin Augereau
                 </div>
               </footer>
             </div>
