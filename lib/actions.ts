@@ -17,9 +17,9 @@ export async function createInternship(data: {
   isPublic: boolean;
 }) {
   // Get the current user from the session
-  const user = await auth();
+  const session = await auth();
 
-  if (!user) {
+  if (!session) {
     throw new Error("Vous devez être connecté pour créer un stage");
   }
 
@@ -28,7 +28,7 @@ export async function createInternship(data: {
     const newInternship = await db.internship.create({
       data: {
         ...data,
-        studentId: user.id,
+        studentId: session.user.id,
       },
     });
 
@@ -47,9 +47,9 @@ export async function contactInternshipStudent(
   message: string,
 ) {
   // Get the current user from the session
-  const user = await auth();
+  const session = await auth();
 
-  if (!user) {
+  if (!session) {
     throw new Error("Vous devez être connecté pour contacter un étudiant");
   }
 
@@ -73,7 +73,7 @@ export async function contactInternshipStudent(
       data: {
         content: message,
         internshipId,
-        senderId: user.id,
+        senderId: session.user.id,
       },
     });
 
@@ -87,14 +87,14 @@ export async function contactInternshipStudent(
 }
 
 export async function getUserInternships() {
-  const user = await auth();
-  if (!user) {
+  const session = await auth();
+  if (!session) {
     throw new Error("Vous devez être connecté pour voir vos stages");
   }
 
   try {
     const internships = await db.internship.findMany({
-      where: { studentId: user.id },
+      where: { studentId: session.user.id },
       orderBy: { createdAt: "desc" },
     });
 
@@ -106,16 +106,16 @@ export async function getUserInternships() {
 }
 
 export async function getUserMessages() {
-  const user = await auth();
+  const session = await auth();
 
-  if (!user) {
+  if (!session) {
     throw new Error("Vous devez être connecté pour voir vos messages");
   }
 
   try {
     // Get internships created by the user
     const userInternships = await db.internship.findMany({
-      where: { studentId: user.id },
+      where: { studentId: session.user.id },
       select: { id: true },
     });
 
@@ -125,7 +125,7 @@ export async function getUserMessages() {
     const messages = await db.message.findMany({
       where: {
         OR: [
-          { senderId: user.id }, // Messages sent by the user
+          { senderId: session.user.id }, // Messages sent by the user
           { internshipId: { in: internshipIds } }, // Messages for user's internships
         ],
       },
@@ -163,9 +163,9 @@ export async function getUserMessages() {
 }
 
 export async function markMessageAsRead(messageId: string) {
-  const user = await auth();
+  const session = await auth();
 
-  if (!user) {
+  if (!session) {
     throw new Error("Vous devez être connecté");
   }
 
@@ -187,7 +187,7 @@ export async function markMessageAsRead(messageId: string) {
     }
 
     // Check if the user is the recipient of the message
-    if (message.internship.studentId !== user.id) {
+    if (message.internship.studentId !== session.user.id) {
       throw new Error(
         "Vous n'avez pas la permission de marquer ce message comme lu",
       );
