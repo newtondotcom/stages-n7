@@ -1,28 +1,46 @@
-import Link from "next/link"
-import { notFound } from "next/navigation"
-import { Badge } from "@/components/ui/badge"
-import { Card } from "@/components/ui/card"
-import { MapPin, Calendar, Building, User, Mail, GraduationCap } from "lucide-react"
-import { getInternshipById } from "@/lib/internships"
-import { ContactInternForm } from "@/components/contact-intern-form"
+import Link from "next/link";
+import { notFound, redirect } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import {
+  MapPin,
+  Calendar,
+  Building,
+  User,
+  Mail,
+  GraduationCap,
+} from "lucide-react";
+import { getInternshipById } from "@/lib/internships";
+import { ContactInternForm } from "@/components/contact-intern-form";
+import { auth } from "@/lib/auth";
 
 interface InternshipDetailPageProps {
   params: {
-    id: string
-  }
+    id: string;
+  };
 }
 
-export default async function InternshipDetailPage({ params }: InternshipDetailPageProps) {
-  const internship = await getInternshipById(params.id)
+export default async function InternshipDetailPage({
+  params,
+}: InternshipDetailPageProps) {
+  const user = await auth();
+  if (!user) {
+    redirect("/auth/signin");
+  }
+
+  const internship = await getInternshipById(params.id);
 
   if (!internship) {
-    notFound()
+    notFound();
   }
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <div className="mb-6">
-        <Link href="/internships" className="text-sm text-muted-foreground hover:underline">
+        <Link
+          href="/internships"
+          className="text-sm text-muted-foreground hover:underline"
+        >
           ← Retour aux stages
         </Link>
       </div>
@@ -50,7 +68,10 @@ export default async function InternshipDetailPage({ params }: InternshipDetailP
           </div>
         </div>
 
-        <Badge variant={internship.canRefer ? "default" : "secondary"} className="text-sm py-1 px-3">
+        <Badge
+          variant={internship.canRefer ? "default" : "secondary"}
+          className="text-sm py-1 px-3"
+        >
           {internship.canRefer ? "Peut pistonner" : "Sans piston"}
         </Badge>
       </div>
@@ -62,17 +83,23 @@ export default async function InternshipDetailPage({ params }: InternshipDetailP
 
             <div className="space-y-4">
               <div>
-                <h3 className="text-sm font-medium text-muted-foreground mb-1">Durée</h3>
+                <h3 className="text-sm font-medium text-muted-foreground mb-1">
+                  Durée
+                </h3>
                 <p>{internship.duration} mois</p>
               </div>
 
               <div>
-                <h3 className="text-sm font-medium text-muted-foreground mb-1">Missions</h3>
+                <h3 className="text-sm font-medium text-muted-foreground mb-1">
+                  Missions
+                </h3>
                 <p className="whitespace-pre-line">{internship.missions}</p>
               </div>
 
               <div>
-                <h3 className="text-sm font-medium text-muted-foreground mb-1">Tuteur</h3>
+                <h3 className="text-sm font-medium text-muted-foreground mb-1">
+                  Tuteur
+                </h3>
                 <div className="flex items-center">
                   <User className="h-4 w-4 mr-2 text-muted-foreground" />
                   <p>{internship.tutor}</p>
@@ -82,7 +109,9 @@ export default async function InternshipDetailPage({ params }: InternshipDetailP
           </Card>
 
           <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Expérience de l'étudiant</h2>
+            <h2 className="text-xl font-semibold mb-4">
+              Expérience de l'étudiant
+            </h2>
 
             <div className="space-y-4">
               <div className="flex items-start gap-3">
@@ -92,15 +121,20 @@ export default async function InternshipDetailPage({ params }: InternshipDetailP
                 <div>
                   <p className="font-medium">{internship.student.name}</p>
                   <p className="text-sm text-muted-foreground">
-                    {internship.student.department} • Promotion {internship.student.graduationYear}
+                    {internship.student.department} • Promotion{" "}
+                    {internship.student.graduationYear}
                   </p>
                 </div>
               </div>
 
               {internship.studentFeedback && (
                 <div>
-                  <h3 className="text-sm font-medium text-muted-foreground mb-1">Retour d'expérience</h3>
-                  <p className="whitespace-pre-line">{internship.studentFeedback}</p>
+                  <h3 className="text-sm font-medium text-muted-foreground mb-1">
+                    Retour d'expérience
+                  </h3>
+                  <p className="whitespace-pre-line">
+                    {internship.studentFeedback}
+                  </p>
                 </div>
               )}
             </div>
@@ -114,8 +148,9 @@ export default async function InternshipDetailPage({ params }: InternshipDetailP
             {internship.canRefer ? (
               <div className="space-y-4">
                 <p className="text-sm text-muted-foreground">
-                  Cet étudiant est prêt à recommander de nouveaux étudiants pour ce stage. Remplissez le formulaire
-                  ci-dessous pour le contacter.
+                  Cet étudiant est prêt à recommander de nouveaux étudiants pour
+                  ce stage. Remplissez le formulaire ci-dessous pour le
+                  contacter.
                 </p>
                 <ContactInternForm internshipId={internship.id} />
               </div>
@@ -123,7 +158,8 @@ export default async function InternshipDetailPage({ params }: InternshipDetailP
               <div className="text-center py-4">
                 <Mail className="h-10 w-10 text-muted-foreground mx-auto mb-2" />
                 <p className="text-sm text-muted-foreground">
-                  Cet étudiant ne propose pas actuellement de recommandations pour ce stage.
+                  Cet étudiant ne propose pas actuellement de recommandations
+                  pour ce stage.
                 </p>
               </div>
             )}
@@ -132,7 +168,8 @@ export default async function InternshipDetailPage({ params }: InternshipDetailP
           <Card className="p-6">
             <h2 className="text-xl font-semibold mb-4">Stages similaires</h2>
 
-            {internship.similarInternships && internship.similarInternships.length > 0 ? (
+            {internship.similarInternships &&
+            internship.similarInternships.length > 0 ? (
               <div className="space-y-3">
                 {internship.similarInternships.map((similar) => (
                   <Link
@@ -140,7 +177,9 @@ export default async function InternshipDetailPage({ params }: InternshipDetailP
                     href={`/internships/${similar.id}`}
                     className="block p-3 border rounded-md hover:bg-muted transition-colors"
                   >
-                    <p className="font-medium line-clamp-1">{similar.subject}</p>
+                    <p className="font-medium line-clamp-1">
+                      {similar.subject}
+                    </p>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
                       <span>{similar.company}</span>
                       <span>•</span>
@@ -150,12 +189,13 @@ export default async function InternshipDetailPage({ params }: InternshipDetailP
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground text-center py-2">Aucun stage similaire trouvé.</p>
+              <p className="text-sm text-muted-foreground text-center py-2">
+                Aucun stage similaire trouvé.
+              </p>
             )}
           </Card>
         </div>
       </div>
     </div>
-  )
+  );
 }
-

@@ -1,15 +1,31 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { getUserInternships, getUserMessages } from "@/lib/actions"
-import { DashboardInternships } from "@/components/dashboard-internships"
-import { DashboardMessages } from "@/components/dashboard-messages"
-import { auth } from "@/lib/auth"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { getUserInternships, getUserMessages } from "@/lib/actions";
+import { DashboardInternships } from "@/components/dashboard-internships";
+import { DashboardMessages } from "@/components/dashboard-messages";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export default async function DashboardPage() {
-  const user = await auth()
-  const [internships, messages] = await Promise.all([getUserInternships(), getUserMessages()])
+  const user = await auth();
+  if (!user) {
+    redirect("/auth/signin");
+  }
 
-  const unreadMessages = messages.filter((message) => !message.isRead && message.internship.student.id === user.id)
+  const [internships, messages] = await Promise.all([
+    getUserInternships(),
+    getUserMessages(),
+  ]);
+
+  const unreadMessages = messages.filter(
+    (message) => !message.isRead && message.internship.student.id === user.id,
+  );
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -29,7 +45,9 @@ export default async function DashboardPage() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle>Messages</CardTitle>
-            <CardDescription>Communication avec d'autres étudiants</CardDescription>
+            <CardDescription>
+              Communication avec d'autres étudiants
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold">{messages.length}</p>
@@ -39,7 +57,9 @@ export default async function DashboardPage() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle>Messages non lus</CardTitle>
-            <CardDescription>Messages en attente de votre réponse</CardDescription>
+            <CardDescription>
+              Messages en attente de votre réponse
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold">{unreadMessages.length}</p>
@@ -69,6 +89,5 @@ export default async function DashboardPage() {
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }
-

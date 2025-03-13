@@ -1,26 +1,26 @@
-"use server"
+"use server";
 
-import { revalidatePath } from "next/cache"
-import { db } from "@/lib/db"
-import { auth } from "@/lib/auth"
+import { revalidatePath } from "next/cache";
+import { db } from "@/lib/db";
+import { auth } from "@/lib/auth";
 
 export async function createInternship(data: {
-  company: string
-  location: string
-  subject: string
-  missions: string
-  tutor: string
-  duration: number
-  year: string
-  type: "1A" | "2A" | "3A" | "Césure"
-  canRefer: boolean
-  isPublic: boolean
+  company: string;
+  location: string;
+  subject: string;
+  missions: string;
+  tutor: string;
+  duration: number;
+  year: string;
+  type: "1A" | "2A" | "3A" | "Césure";
+  canRefer: boolean;
+  isPublic: boolean;
 }) {
   // Get the current user from the session
-  const user = await auth()
+  const user = await auth();
 
   if (!user) {
-    throw new Error("Vous devez être connecté pour créer un stage")
+    throw new Error("Vous devez être connecté pour créer un stage");
   }
 
   try {
@@ -30,24 +30,27 @@ export async function createInternship(data: {
         ...data,
         studentId: user.id,
       },
-    })
+    });
 
     // Revalidate the internships page to show the new internship
-    revalidatePath("/internships")
+    revalidatePath("/internships");
 
-    return newInternship
+    return newInternship;
   } catch (error) {
-    console.error("Error creating internship:", error)
-    throw new Error("Échec de la création du stage")
+    console.error("Error creating internship:", error);
+    throw new Error("Échec de la création du stage");
   }
 }
 
-export async function contactInternshipStudent(internshipId: string, message: string) {
+export async function contactInternshipStudent(
+  internshipId: string,
+  message: string,
+) {
   // Get the current user from the session
-  const user = await auth()
+  const user = await auth();
 
   if (!user) {
-    throw new Error("Vous devez être connecté pour contacter un étudiant")
+    throw new Error("Vous devez être connecté pour contacter un étudiant");
   }
 
   try {
@@ -55,14 +58,14 @@ export async function contactInternshipStudent(internshipId: string, message: st
     const internship = await db.internship.findUnique({
       where: { id: internshipId },
       select: { canRefer: true, studentId: true },
-    })
+    });
 
     if (!internship) {
-      throw new Error("Stage non trouvé")
+      throw new Error("Stage non trouvé");
     }
 
     if (!internship.canRefer) {
-      throw new Error("Ce stage n'est pas disponible pour une recommandation")
+      throw new Error("Ce stage n'est pas disponible pour une recommandation");
     }
 
     // Create a new message
@@ -72,42 +75,42 @@ export async function contactInternshipStudent(internshipId: string, message: st
         internshipId,
         senderId: user.id,
       },
-    })
+    });
 
     // In a real app, you might want to send an email notification here
 
-    return { success: true, messageId: newMessage.id }
+    return { success: true, messageId: newMessage.id };
   } catch (error) {
-    console.error("Error contacting student:", error)
-    throw new Error("Échec de l'envoi du message")
+    console.error("Error contacting student:", error);
+    throw new Error("Échec de l'envoi du message");
   }
 }
 
 export async function getUserInternships() {
-  const user = await auth()
-
+  const user = await auth();
+  console.log(user);
   if (!user) {
-    throw new Error("Vous devez être connecté pour voir vos stages")
+    throw new Error("Vous devez être connecté pour voir vos stages");
   }
 
   try {
     const internships = await db.internship.findMany({
       where: { studentId: user.id },
       orderBy: { createdAt: "desc" },
-    })
+    });
 
-    return internships
+    return internships;
   } catch (error) {
-    console.error("Error fetching user internships:", error)
-    throw new Error("Échec de la récupération des stages")
+    console.error("Error fetching user internships:", error);
+    throw new Error("Échec de la récupération des stages");
   }
 }
 
 export async function getUserMessages() {
-  const user = await auth()
+  const user = await auth();
 
   if (!user) {
-    throw new Error("Vous devez être connecté pour voir vos messages")
+    throw new Error("Vous devez être connecté pour voir vos messages");
   }
 
   try {
@@ -115,9 +118,9 @@ export async function getUserMessages() {
     const userInternships = await db.internship.findMany({
       where: { studentId: user.id },
       select: { id: true },
-    })
+    });
 
-    const internshipIds = userInternships.map((i) => i.id)
+    const internshipIds = userInternships.map((i) => i.id);
 
     // Get messages for those internships
     const messages = await db.message.findMany({
@@ -151,20 +154,20 @@ export async function getUserMessages() {
         },
       },
       orderBy: { createdAt: "desc" },
-    })
+    });
 
-    return messages
+    return messages;
   } catch (error) {
-    console.error("Error fetching user messages:", error)
-    throw new Error("Échec de la récupération des messages")
+    console.error("Error fetching user messages:", error);
+    throw new Error("Échec de la récupération des messages");
   }
 }
 
 export async function markMessageAsRead(messageId: string) {
-  const user = await auth()
+  const user = await auth();
 
   if (!user) {
-    throw new Error("Vous devez être connecté")
+    throw new Error("Vous devez être connecté");
   }
 
   try {
@@ -178,27 +181,28 @@ export async function markMessageAsRead(messageId: string) {
           },
         },
       },
-    })
+    });
 
     if (!message) {
-      throw new Error("Message non trouvé")
+      throw new Error("Message non trouvé");
     }
 
     // Check if the user is the recipient of the message
     if (message.internship.studentId !== user.id) {
-      throw new Error("Vous n'avez pas la permission de marquer ce message comme lu")
+      throw new Error(
+        "Vous n'avez pas la permission de marquer ce message comme lu",
+      );
     }
 
     // Mark the message as read
     await db.message.update({
       where: { id: messageId },
       data: { isRead: true },
-    })
+    });
 
-    return { success: true }
+    return { success: true };
   } catch (error) {
-    console.error("Error marking message as read:", error)
-    throw new Error("Échec du marquage du message comme lu")
+    console.error("Error marking message as read:", error);
+    throw new Error("Échec du marquage du message comme lu");
   }
 }
-

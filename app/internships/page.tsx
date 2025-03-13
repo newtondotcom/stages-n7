@@ -1,10 +1,16 @@
-import { Suspense } from "react"
-import { InternshipSearch } from "@/components/internship-search"
-import { InternshipList } from "@/components/internship-list"
-import { InternshipFilters } from "@/components/internship-filters"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Suspense } from "react";
+import { InternshipSearch } from "@/components/internship-search";
+import { InternshipList } from "@/components/internship-list";
+import { InternshipFilters } from "@/components/internship-filters";
+import { Skeleton } from "@/components/ui/skeleton";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export default async function InternshipsPage() {
+  const user = await auth();
+  if (!user) {
+    redirect("/auth/signin");
+  }
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Explorer les stages</h1>
@@ -22,7 +28,7 @@ export default async function InternshipsPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function InternshipListSkeleton() {
@@ -42,6 +48,5 @@ function InternshipListSkeleton() {
           </div>
         ))}
     </div>
-  )
+  );
 }
-
