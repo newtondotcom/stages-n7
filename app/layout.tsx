@@ -10,7 +10,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "ENSEEIHT Internship Platform",
+  title: "ENSEEIHT Internship",
   description: "Find and share internship opportunities for ENSEEIHT students",
   generator: "v0.dev",
 };
