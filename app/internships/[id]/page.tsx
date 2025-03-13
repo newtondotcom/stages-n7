@@ -1,28 +1,33 @@
-import Link from "next/link"
-import { notFound } from "next/navigation"
-import { Badge } from "@/components/ui/badge"
-import { Card } from "@/components/ui/card"
-import { MapPin, Calendar, Building, User, Mail } from "lucide-react"
-import { getInternshipById } from "@/lib/internships"
-import { ContactInternForm } from "@/components/contact-intern-form"
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { MapPin, Calendar, Building, User, Mail } from "lucide-react";
+import { getInternshipById } from "@/lib/internships";
+import { ContactInternForm } from "@/components/contact-intern-form";
 
 interface InternshipDetailPageProps {
   params: {
-    id: string
-  }
+    id: string;
+  };
 }
 
-export default async function InternshipDetailPage({ params }: InternshipDetailPageProps) {
-  const internship = await getInternshipById(params.id)
+export default async function InternshipDetailPage({
+  params,
+}: InternshipDetailPageProps) {
+  const internship = await getInternshipById(params.id);
 
   if (!internship) {
-    notFound()
+    notFound();
   }
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <div className="mb-6">
-        <Link href="/internships" className="text-sm text-muted-foreground hover:underline">
+        <Link
+          href="/internships"
+          className="text-sm text-muted-foreground hover:underline"
+        >
           ← Back to internships
         </Link>
       </div>
@@ -46,7 +51,10 @@ export default async function InternshipDetailPage({ params }: InternshipDetailP
           </div>
         </div>
 
-        <Badge variant={internship.canRefer ? "default" : "secondary"} className="text-sm py-1 px-3">
+        <Badge
+          variant={internship.canRefer ? "default" : "secondary"}
+          className="text-sm py-1 px-3"
+        >
           {internship.canRefer ? "Can Refer" : "No Referral"}
         </Badge>
       </div>
@@ -58,17 +66,23 @@ export default async function InternshipDetailPage({ params }: InternshipDetailP
 
             <div className="space-y-4">
               <div>
-                <h3 className="text-sm font-medium text-muted-foreground mb-1">Duration</h3>
+                <h3 className="text-sm font-medium text-muted-foreground mb-1">
+                  Duration
+                </h3>
                 <p>{internship.duration} months</p>
               </div>
 
               <div>
-                <h3 className="text-sm font-medium text-muted-foreground mb-1">Missions</h3>
+                <h3 className="text-sm font-medium text-muted-foreground mb-1">
+                  Missions
+                </h3>
                 <p className="whitespace-pre-line">{internship.missions}</p>
               </div>
 
               <div>
-                <h3 className="text-sm font-medium text-muted-foreground mb-1">Tutor</h3>
+                <h3 className="text-sm font-medium text-muted-foreground mb-1">
+                  Tutor
+                </h3>
                 <div className="flex items-center">
                   <User className="h-4 w-4 mr-2 text-muted-foreground" />
                   <p>{internship.tutor}</p>
@@ -88,15 +102,20 @@ export default async function InternshipDetailPage({ params }: InternshipDetailP
                 <div>
                   <p className="font-medium">{internship.student.name}</p>
                   <p className="text-sm text-muted-foreground">
-                    {internship.student.department} • Class of {internship.student.graduationYear}
+                    {internship.student.department} • Class of{" "}
+                    {internship.student.graduationYear}
                   </p>
                 </div>
               </div>
 
               {internship.studentFeedback && (
                 <div>
-                  <h3 className="text-sm font-medium text-muted-foreground mb-1">Student Feedback</h3>
-                  <p className="whitespace-pre-line">{internship.studentFeedback}</p>
+                  <h3 className="text-sm font-medium text-muted-foreground mb-1">
+                    Student Feedback
+                  </h3>
+                  <p className="whitespace-pre-line">
+                    {internship.studentFeedback}
+                  </p>
                 </div>
               )}
             </div>
@@ -110,8 +129,8 @@ export default async function InternshipDetailPage({ params }: InternshipDetailP
             {internship.canRefer ? (
               <div className="space-y-4">
                 <p className="text-sm text-muted-foreground">
-                  This student is willing to refer new students for this internship. Fill out the form below to get in
-                  touch.
+                  This student is willing to refer new students for this
+                  internship. Fill out the form below to get in touch.
                 </p>
                 <ContactInternForm internshipId={internship.id} />
               </div>
@@ -119,7 +138,8 @@ export default async function InternshipDetailPage({ params }: InternshipDetailP
               <div className="text-center py-4">
                 <Mail className="h-10 w-10 text-muted-foreground mx-auto mb-2" />
                 <p className="text-sm text-muted-foreground">
-                  This student is not currently offering referrals for this internship.
+                  This student is not currently offering referrals for this
+                  internship.
                 </p>
               </div>
             )}
@@ -128,7 +148,8 @@ export default async function InternshipDetailPage({ params }: InternshipDetailP
           <Card className="p-6">
             <h2 className="text-xl font-semibold mb-4">Similar Internships</h2>
 
-            {internship.similarInternships && internship.similarInternships.length > 0 ? (
+            {internship.similarInternships &&
+            internship.similarInternships.length > 0 ? (
               <div className="space-y-3">
                 {internship.similarInternships.map((similar) => (
                   <Link
@@ -136,7 +157,9 @@ export default async function InternshipDetailPage({ params }: InternshipDetailP
                     href={`/internships/${similar.id}`}
                     className="block p-3 border rounded-md hover:bg-muted transition-colors"
                   >
-                    <p className="font-medium line-clamp-1">{similar.subject}</p>
+                    <p className="font-medium line-clamp-1">
+                      {similar.subject}
+                    </p>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
                       <span>{similar.company}</span>
                       <span>•</span>
@@ -146,12 +169,13 @@ export default async function InternshipDetailPage({ params }: InternshipDetailP
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground text-center py-2">No similar internships found.</p>
+              <p className="text-sm text-muted-foreground text-center py-2">
+                No similar internships found.
+              </p>
             )}
           </Card>
         </div>
       </div>
     </div>
-  )
+  );
 }
-
