@@ -88,7 +88,6 @@ export async function contactInternshipStudent(
 
 export async function getUserInternships() {
   const user = await auth();
-  console.log(user);
   if (!user) {
     throw new Error("Vous devez être connecté pour voir vos stages");
   }
