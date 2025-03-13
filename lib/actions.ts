@@ -12,16 +12,17 @@ export async function createInternship(data: {
   tutor: string
   duration: number
   year: string
+  type: "1A" | "2A" | "3A" | "Césure"
   canRefer: boolean
   isPublic: boolean
 }) {
   // Get the current user from the session
   const user = await auth()
-  
+
   if (!user) {
-    throw new Error("You must be logged in to create an internship")
+    throw new Error("Vous devez être connecté pour créer un stage")
   }
-  
+
   try {
     // Create the internship in the database
     const newInternship = await db.internship.create({
@@ -30,43 +31,40 @@ export async function createInternship(data: {
         studentId: user.id,
       },
     })
-    
+
     // Revalidate the internships page to show the new internship
     revalidatePath("/internships")
-    
+
     return newInternship
   } catch (error) {
     console.error("Error creating internship:", error)
-    throw new Error("Failed to create internship")
+    throw new Error("Échec de la création du stage")
   }
 }
 
-export async function contactInternshipStudent(
-  internshipId: string,
-  message: string
-) {
+export async function contactInternshipStudent(internshipId: string, message: string) {
   // Get the current user from the session
   const user = await auth()
-  
+
   if (!user) {
-    throw new Error("You must be logged in to contact a student")
+    throw new Error("Vous devez être connecté pour contacter un étudiant")
   }
-  
+
   try {
     // Verify the internship exists and can be referred
     const internship = await db.internship.findUnique({
       where: { id: internshipId },
       select: { canRefer: true, studentId: true },
     })
-    
+
     if (!internship) {
-      throw new Error("Internship not found")
+      throw new Error("Stage non trouvé")
     }
-    
+
     if (!internship.canRefer) {
-      throw new Error("This internship is not available for referral")
+      throw new Error("Ce stage n'est pas disponible pour une recommandation")
     }
-    
+
     // Create a new message
     const newMessage = await db.message.create({
       data: {
@@ -75,52 +73,52 @@ export async function contactInternshipStudent(
         senderId: user.id,
       },
     })
-    
+
     // In a real app, you might want to send an email notification here
-    
+
     return { success: true, messageId: newMessage.id }
   } catch (error) {
     console.error("Error contacting student:", error)
-    throw new Error("Failed to send message")
+    throw new Error("Échec de l'envoi du message")
   }
 }
 
 export async function getUserInternships() {
   const user = await auth()
-  
+
   if (!user) {
-    throw new Error("You must be logged in to view your internships")
+    throw new Error("Vous devez être connecté pour voir vos stages")
   }
-  
+
   try {
     const internships = await db.internship.findMany({
       where: { studentId: user.id },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: "desc" },
     })
-    
+
     return internships
   } catch (error) {
     console.error("Error fetching user internships:", error)
-    throw new Error("Failed to fetch internships")
+    throw new Error("Échec de la récupération des stages")
   }
 }
 
 export async function getUserMessages() {
   const user = await auth()
-  
+
   if (!user) {
-    throw new Error("You must be logged in to view your messages")
+    throw new Error("Vous devez être connecté pour voir vos messages")
   }
-  
+
   try {
     // Get internships created by the user
     const userInternships = await db.internship.findMany({
       where: { studentId: user.id },
       select: { id: true },
     })
-    
-    const internshipIds = userInternships.map(i => i.id)
-    
+
+    const internshipIds = userInternships.map((i) => i.id)
+
     // Get messages for those internships
     const messages = await db.message.findMany({
       where: {
@@ -152,23 +150,23 @@ export async function getUserMessages() {
           },
         },
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: "desc" },
     })
-    
+
     return messages
   } catch (error) {
     console.error("Error fetching user messages:", error)
-    throw new Error("Failed to fetch messages")
+    throw new Error("Échec de la récupération des messages")
   }
 }
 
 export async function markMessageAsRead(messageId: string) {
   const user = await auth()
-  
+
   if (!user) {
-    throw new Error("You must be logged in")
+    throw new Error("Vous devez être connecté")
   }
-  
+
   try {
     // Get the message
     const message = await db.message.findUnique({
@@ -181,26 +179,26 @@ export async function markMessageAsRead(messageId: string) {
         },
       },
     })
-    
+
     if (!message) {
-      throw new Error("Message not found")
+      throw new Error("Message non trouvé")
     }
-    
+
     // Check if the user is the recipient of the message
     if (message.internship.studentId !== user.id) {
-      throw new Error("You don't have permission to mark this message as read")
+      throw new Error("Vous n'avez pas la permission de marquer ce message comme lu")
     }
-    
+
     // Mark the message as read
     await db.message.update({
       where: { id: messageId },
       data: { isRead: true },
     })
-    
+
     return { success: true }
   } catch (error) {
     console.error("Error marking message as read:", error)
-    throw new Error("Failed to mark message as read")
+    throw new Error("Échec du marquage du message comme lu")
   }
 }
 
