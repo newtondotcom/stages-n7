@@ -13,16 +13,14 @@ export const authOptions: NextAuthOptions = {
       authorization: {
         params: { scope: "openid profile email churros:profile" },
       },
-      client: {
-        id_token_signed_response_alg: "HS256",
-      },
       profile(profile) {
-        console.log("profile", profile);
         return {
-          id: profile.sub,
-          name: profile.name ?? profile.preferred_username,
+          id: profile.uid,
+          name: profile.fullName ?? profile.preferred_username,
           email: profile.email,
-          image: profile.picture,
+          image: profile.pictureURL,
+          graduationYear: profile.graduationYear,
+          department: profile.major.uid,
         };
       },
     }),
@@ -30,17 +28,13 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     session: async ({ session, user }) => {
       if (session?.user) {
-        console.log("session.user", session.user);
-        session.user.name = user.name;
-        // You can add more user properties to the session here if needed
+        session.user.name = user.name!;
+        session.user.email = user.email!;
+        session.user.image = user.image!;
+        session.user.graduationYear = user.graduationYear!;
+        session.user.department = user.department!;
       }
       return session;
-    },
-    jwt: async ({ token, user, account, profile }) => {
-      if (user) {
-        //console.log("jwt", token, user, account, profile);
-      }
-      return token;
     },
   },
 };
