@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils"
-import { GraduationCap } from "lucide-react"
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { GraduationCap } from "lucide-react";
 
 export function MainNav() {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   const routes = [
     {
@@ -17,7 +17,9 @@ export function MainNav() {
     {
       href: "/internships",
       label: "Browse",
-      active: pathname === "/internships" || (pathname.startsWith("/internships/") && !pathname.includes("/new")),
+      active:
+        pathname === "/internships" ||
+        (pathname.startsWith("/internships/") && !pathname.includes("/new")),
     },
     {
       href: "/internships/new",
@@ -29,13 +31,13 @@ export function MainNav() {
       label: "Dashboard",
       active: pathname === "/dashboard",
     },
-  ]
+  ];
 
   return (
     <div className="flex items-center space-x-4 lg:space-x-6">
       <Link href="/" className="flex items-center space-x-2">
-        <GraduationCap className="h-6 w-6" />
-        <span className="font-bold hidden md:inline-block">ENSEEIHT Internships</span>
+        <img src="/n7.png" alt="ENSEEIHT Internships" width={50} />
+        <span className="font-bold hidden md:inline-block">Internships</span>
       </Link>
       <nav className="flex items-center space-x-4 lg:space-x-6">
         {routes.map((route) => (
@@ -52,6 +54,5 @@ export function MainNav() {
         ))}
       </nav>
     </div>
-  )
+  );
 }
-

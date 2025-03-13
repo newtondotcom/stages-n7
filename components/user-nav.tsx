@@ -29,10 +29,11 @@ export function UserNav() {
   if (status === "unauthenticated") {
     return (
       <Button
-        size="sm"
+        variant="secondary"
         onClick={() => signIn("authentik", { callbackUrl: "/dashboard" })}
       >
-        Login
+        <img src="https://git.inpt.fr/inp-net/visual-identity/-/raw/main/derivations/auth.svg" />
+        Connexion avec INP-net
       </Button>
     );
   }

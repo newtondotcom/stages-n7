@@ -1,12 +1,18 @@
-import Link from "next/link"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { MapPin, Calendar, User, Briefcase } from "lucide-react"
-import type { Internship } from "@/lib/types"
+import Link from "next/link";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { MapPin, Calendar, User, Briefcase } from "lucide-react";
+import type { Internship } from "@/lib/types";
 
 interface InternshipCardProps {
-  internship: Internship
+  internship: Internship;
 }
 
 export function InternshipCard({ internship }: InternshipCardProps) {
@@ -40,7 +46,9 @@ export function InternshipCard({ internship }: InternshipCardProps) {
             <User className="h-4 w-4 text-muted-foreground" />
             <span>Tutor: {internship.tutor}</span>
           </div>
-          <p className="text-sm text-muted-foreground line-clamp-3 mt-2">{internship.missions}</p>
+          <p className="text-sm text-muted-foreground line-clamp-3 mt-2">
+            {internship.missions}
+          </p>
         </div>
       </CardContent>
       <CardFooter>
@@ -49,6 +57,5 @@ export function InternshipCard({ internship }: InternshipCardProps) {
         </Button>
       </CardFooter>
     </Card>
-  )
+  );
 }
-
