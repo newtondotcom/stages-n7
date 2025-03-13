@@ -1,11 +1,7 @@
-import { getServerSession, type NextAuthOptions } from "next-auth";
-import AuthentikProvider from "next-auth/providers/authentik";
-import { adapter } from "@/types/adapter";
-import type {
-  GetServerSidePropsContext,
-  NextApiRequest,
-  NextApiResponse,
-} from "next";
+import { getServerSession, type NextAuthOptions } from "next-auth"
+import AuthentikProvider from "next-auth/providers/authentik"
+import { adapter } from "@/types/adapter"
+import type { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from "next"
 
 export const authOptions: NextAuthOptions = {
   adapter: adapter,
@@ -25,20 +21,21 @@ export const authOptions: NextAuthOptions = {
           image: profile.pictureURL,
           graduationYear: profile.graduationYear.toString(),
           department: profile.major.uid,
-        };
+        }
       },
     }),
   ],
   callbacks: {
     session: async ({ session, user }) => {
       if (session?.user) {
-        session.user.name = user.name!;
-        session.user.email = user.email!;
-        session.user.image = user.image!;
-        session.user.graduationYear = user.graduationYear!;
-        session.user.department = user.department!;
+        session.user.id = user.id
+        session.user.name = user.name!
+        session.user.email = user.email!
+        session.user.image = user.image!
+        session.user.graduationYear = user.graduationYear!
+        session.user.department = user.department!
       }
-      return session;
+      return session
     },
   },
   pages: {
@@ -46,14 +43,12 @@ export const authOptions: NextAuthOptions = {
     signOut: "/",
     error: "/auth/error",
   },
-};
+}
 
 // Use it in server contexts
 export function auth(
-  ...args:
-    | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
-    | [NextApiRequest, NextApiResponse]
-    | []
+  ...args: [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]] | [NextApiRequest, NextApiResponse] | []
 ) {
-  return getServerSession(...args, authOptions);
+  return getServerSession(...args, authOptions)
 }
+

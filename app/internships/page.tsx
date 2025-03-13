@@ -1,13 +1,13 @@
-import { Suspense } from "react";
-import { InternshipSearch } from "@/components/internship-search";
-import { InternshipList } from "@/components/internship-list";
-import { InternshipFilters } from "@/components/internship-filters";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Suspense } from "react"
+import { InternshipSearch } from "@/components/internship-search"
+import { InternshipList } from "@/components/internship-list"
+import { InternshipFilters } from "@/components/internship-filters"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default async function InternshipsPage() {
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Browse Internships</h1>
+      <h1 className="text-3xl font-bold mb-6">Explorer les stages</h1>
 
       <InternshipSearch />
 
@@ -22,7 +22,7 @@ export default async function InternshipsPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 function InternshipListSkeleton() {
@@ -42,5 +42,6 @@ function InternshipListSkeleton() {
           </div>
         ))}
     </div>
-  );
+  )
 }
+

@@ -15,6 +15,7 @@ export interface Internship {
   tutor: string
   duration: number
   year: string
+  type: "1A" | "2A" | "3A" | "Césure" // Ajout du type de stage
   canRefer: boolean
   isPublic: boolean
   studentFeedback?: string
@@ -35,6 +36,7 @@ export interface Message {
 export interface InternshipFilters {
   query?: string
   year?: string
+  type?: string // Ajout du filtre par type
   minDuration?: number
   maxDuration?: number
   canRefer?: boolean

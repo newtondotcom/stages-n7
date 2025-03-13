@@ -1,7 +1,7 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
-import { DummyInternships } from "@/components/dummy-internships";
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Search } from "lucide-react"
+import { DummyInternships } from "@/components/dummy-internships"
 
 export default async function Home() {
   return (
@@ -10,20 +10,19 @@ export default async function Home() {
         <div className="text-center space-y-4">
           <h1 className="text-4xl md:text-5xl font-bold tracking-tighter">
             <span className="text-primary"> ENSEEIHT </span>
-            Internship Platform
+            Plateforme de Stages
           </h1>
           <p className="text-xl text-muted-foreground max-w-[700px] mx-auto">
-            Discover, share, and connect with internship opportunities for
-            ENSEEIHT students.
+            Découvrez, partagez et connectez-vous avec des opportunités de stage pour les étudiants de l'ENSEEIHT.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Button asChild size="lg">
-              <Link href="/internships/new">Declare Your Internship</Link>
+              <Link href="/internships/new">Déclarer votre stage</Link>
             </Button>
             <Button asChild variant="outline" size="lg">
               <Link href="/internships">
                 <Search className="mr-2 h-4 w-4" />
-                Browse Internships
+                Explorer les stages
               </Link>
             </Button>
           </div>
@@ -32,9 +31,9 @@ export default async function Home() {
 
       <section className="py-8 md:py-12">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Latest Internships</h2>
+          <h2 className="text-2xl font-bold">Derniers stages</h2>
           <Button asChild variant="ghost">
-            <Link href="/internships">View All</Link>
+            <Link href="/internships">Voir tous</Link>
           </Button>
         </div>
         <DummyInternships />
@@ -42,31 +41,31 @@ export default async function Home() {
 
       <section className="py-8 md:py-12 bg-muted rounded-lg p-6">
         <h2 className="text-2xl font-bold mb-4">
-          How It
-          <span className="text-primary"> Works</span>
+          Comment ça
+          <span className="text-primary"> fonctionne</span>
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="space-y-2">
-            <h3 className="text-xl font-medium">Share Your Experience</h3>
+            <h3 className="text-xl font-medium">Partagez votre expérience</h3>
             <p className="text-muted-foreground">
-              Document your internship details to help future students.
+              Documentez les détails de votre stage pour aider les futurs étudiants.
             </p>
           </div>
           <div className="space-y-2">
-            <h3 className="text-xl font-medium">Find Opportunities</h3>
+            <h3 className="text-xl font-medium">Trouvez des opportunités</h3>
             <p className="text-muted-foreground">
-              Search through past internships to discover potential placements.
+              Recherchez parmi les stages passés pour découvrir des placements potentiels.
             </p>
           </div>
           <div className="space-y-2">
-            <h3 className="text-xl font-medium">Connect & Refer</h3>
+            <h3 className="text-xl font-medium">Connectez & Référez</h3>
             <p className="text-muted-foreground">
-              Maybe the student can refer you to a company where they completed
-              their internship.
+              Peut-être que l'étudiant peut vous recommander auprès d'une entreprise où il a effectué son stage.
             </p>
           </div>
         </div>
       </section>
     </div>
-  );
+  )
 }
+

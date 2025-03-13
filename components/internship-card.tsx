@@ -1,18 +1,12 @@
-import Link from "next/link";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { MapPin, Calendar, User, Briefcase } from "lucide-react";
-import type { Internship } from "@/lib/types";
+import Link from "next/link"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { MapPin, Calendar, User, Briefcase, GraduationCap } from "lucide-react"
+import type { Internship } from "@/lib/types"
 
 interface InternshipCardProps {
-  internship: Internship;
+  internship: Internship
 }
 
 export function InternshipCard({ internship }: InternshipCardProps) {
@@ -22,7 +16,7 @@ export function InternshipCard({ internship }: InternshipCardProps) {
         <div className="flex justify-between items-start">
           <CardTitle className="line-clamp-2">{internship.subject}</CardTitle>
           <Badge variant={internship.canRefer ? "default" : "secondary"}>
-            {internship.canRefer ? "Can Refer" : "No Referral"}
+            {internship.canRefer ? "Peut pistonner" : "Sans piston"}
           </Badge>
         </div>
         <div className="text-sm text-muted-foreground flex items-center gap-1">
@@ -35,7 +29,7 @@ export function InternshipCard({ internship }: InternshipCardProps) {
           <div className="flex items-center gap-2 text-sm">
             <Calendar className="h-4 w-4 text-muted-foreground" />
             <span>
-              {internship.duration} months • {internship.year}
+              {internship.duration} mois • {internship.year}
             </span>
           </div>
           <div className="flex items-center gap-2 text-sm">
@@ -43,19 +37,22 @@ export function InternshipCard({ internship }: InternshipCardProps) {
             <span className="line-clamp-1">{internship.company}</span>
           </div>
           <div className="flex items-center gap-2 text-sm">
-            <User className="h-4 w-4 text-muted-foreground" />
-            <span>Tutor: {internship.tutor}</span>
+            <GraduationCap className="h-4 w-4 text-muted-foreground" />
+            <span>Stage {internship.type}</span>
           </div>
-          <p className="text-sm text-muted-foreground line-clamp-3 mt-2">
-            {internship.missions}
-          </p>
+          <div className="flex items-center gap-2 text-sm">
+            <User className="h-4 w-4 text-muted-foreground" />
+            <span>Tuteur: {internship.tutor}</span>
+          </div>
+          <p className="text-sm text-muted-foreground line-clamp-3 mt-2">{internship.missions}</p>
         </div>
       </CardContent>
       <CardFooter>
         <Button asChild className="w-full">
-          <Link href={`/internships/${internship.id}`}>View Details</Link>
+          <Link href={`/internships/${internship.id}`}>Voir les détails</Link>
         </Button>
       </CardFooter>
     </Card>
-  );
+  )
 }
+

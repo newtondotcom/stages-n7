@@ -1,12 +1,12 @@
-import { type Internship, type InternshipFilters, type PaginatedInternships } from "@/lib/types"
+import type { Internship, InternshipFilters, PaginatedInternships } from "@/lib/types"
 import { db } from "@/lib/db"
 
-export async function getLatestInternships(limit: number = 5): Promise<Internship[]> {
+export async function getLatestInternships(limit = 5): Promise<Internship[]> {
   try {
     const internships = await db.internship.findMany({
       take: limit,
       orderBy: {
-        createdAt: 'desc',
+        createdAt: "desc",
       },
       include: {
         student: {
@@ -23,14 +23,12 @@ export async function getLatestInternships(limit: number = 5): Promise<Internshi
 
     return internships.map(mapPrismaInternshipToInternship)
   } catch (error) {
-    console.error('Error fetching latest internships:', error)
+    console.error("Error fetching latest internships:", error)
     return []
   }
 }
 
-export async function getFilteredInternships(
-  filters: InternshipFilters
-): Promise<PaginatedInternships> {
+export async function getFilteredInternships(filters: InternshipFilters): Promise<PaginatedInternships> {
   try {
     const where: any = {
       isPublic: true,
@@ -40,15 +38,19 @@ export async function getFilteredInternships(
     if (filters.query) {
       const query = filters.query.toLowerCase()
       where.OR = [
-        { company: { contains: query, mode: 'insensitive' } },
-        { location: { contains: query, mode: 'insensitive' } },
-        { subject: { contains: query, mode: 'insensitive' } },
-        { missions: { contains: query, mode: 'insensitive' } },
+        { company: { contains: query, mode: "insensitive" } },
+        { location: { contains: query, mode: "insensitive" } },
+        { subject: { contains: query, mode: "insensitive" } },
+        { missions: { contains: query, mode: "insensitive" } },
       ]
     }
 
     if (filters.year) {
       where.year = filters.year
+    }
+
+    if (filters.type) {
+      where.type = filters.type
     }
 
     if (filters.minDuration !== undefined) {
@@ -83,7 +85,7 @@ export async function getFilteredInternships(
       skip: (page - 1) * pageSize,
       take: pageSize,
       orderBy: {
-        createdAt: 'desc',
+        createdAt: "desc",
       },
       include: {
         student: {
@@ -104,7 +106,7 @@ export async function getFilteredInternships(
       currentPage: page,
     }
   } catch (error) {
-    console.error('Error fetching filtered internships:', error)
+    console.error("Error fetching filtered internships:", error)
     return {
       internships: [],
       totalPages: 0,
@@ -138,10 +140,7 @@ export async function getInternshipById(id: string): Promise<Internship | null> 
     const similarInternships = await db.internship.findMany({
       where: {
         id: { not: id },
-        OR: [
-          { company: internship.company },
-          { location: internship.location },
-        ],
+        OR: [{ company: internship.company }, { location: internship.location }],
         isPublic: true,
       },
       take: 3,
@@ -158,7 +157,7 @@ export async function getInternshipById(id: string): Promise<Internship | null> 
       similarInternships,
     }
   } catch (error) {
-    console.error('Error fetching internship by ID:', error)
+    console.error("Error fetching internship by ID:", error)
     return null
   }
 }
@@ -174,7 +173,9 @@ function mapPrismaInternshipToInternship(internship: any): Internship {
     tutor: internship.tutor,
     duration: internship.duration,
     year: internship.year,
+    type: internship.type || "3A", // Valeur par défaut pour les stages existants
     canRefer: internship.canRefer,
+    isPublic: internship.isPublic,
     studentFeedback: internship.studentFeedback || undefined,
     student: {
       id: internship.student.id,
@@ -183,6 +184,8 @@ function mapPrismaInternshipToInternship(internship: any): Internship {
       department: internship.student.department,
       graduationYear: internship.student.graduationYear,
     },
+    createdAt: internship.createdAt,
+    updatedAt: internship.updatedAt,
   }
 }
 

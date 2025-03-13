@@ -1,36 +1,25 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { getUserInternships, getUserMessages } from "@/lib/actions";
-import { DashboardInternships } from "@/components/dashboard-internships";
-import { DashboardMessages } from "@/components/dashboard-messages";
-import { auth } from "@/lib/auth";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { getUserInternships, getUserMessages } from "@/lib/actions"
+import { DashboardInternships } from "@/components/dashboard-internships"
+import { DashboardMessages } from "@/components/dashboard-messages"
+import { auth } from "@/lib/auth"
 
 export default async function DashboardPage() {
-  const user = await auth();
-  const [internships, messages] = await Promise.all([
-    getUserInternships(),
-    getUserMessages(),
-  ]);
+  const user = await auth()
+  const [internships, messages] = await Promise.all([getUserInternships(), getUserMessages()])
 
-  const unreadMessages = messages.filter(
-    (message) => !message.isRead && message.internship.student.id === user.id,
-  );
+  const unreadMessages = messages.filter((message) => !message.isRead && message.internship.student.id === user.id)
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
+      <h1 className="text-3xl font-bold mb-6">Tableau de bord</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle>My Internships</CardTitle>
-            <CardDescription>Internships you've declared</CardDescription>
+            <CardTitle>Mes stages</CardTitle>
+            <CardDescription>Stages que vous avez déclarés</CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold">{internships.length}</p>
@@ -40,7 +29,7 @@ export default async function DashboardPage() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle>Messages</CardTitle>
-            <CardDescription>Communication with other students</CardDescription>
+            <CardDescription>Communication avec d'autres étudiants</CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold">{messages.length}</p>
@@ -49,8 +38,8 @@ export default async function DashboardPage() {
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle>Unread Messages</CardTitle>
-            <CardDescription>Messages awaiting your response</CardDescription>
+            <CardTitle>Messages non lus</CardTitle>
+            <CardDescription>Messages en attente de votre réponse</CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold">{unreadMessages.length}</p>
@@ -60,7 +49,7 @@ export default async function DashboardPage() {
 
       <Tabs defaultValue="internships" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="internships">My Internships</TabsTrigger>
+          <TabsTrigger value="internships">Mes stages</TabsTrigger>
           <TabsTrigger value="messages">
             Messages
             {unreadMessages.length > 0 && (
@@ -80,5 +69,6 @@ export default async function DashboardPage() {
         </TabsContent>
       </Tabs>
     </div>
-  );
+  )
 }
+

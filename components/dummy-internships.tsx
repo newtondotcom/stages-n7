@@ -1,8 +1,8 @@
-"use client";
-import { InternshipCard } from "@/components/internship-card";
-import type { Internship, User } from "@/lib/types";
-import { Button } from "@/components/ui/button";
-import { signIn } from "next-auth/react";
+"use client"
+import { InternshipCard } from "@/components/internship-card"
+import type { Internship, User } from "@/lib/types"
+import { Button } from "@/components/ui/button"
+import { signIn } from "next-auth/react"
 
 const dummyUsers: User[] = [
   {
@@ -12,24 +12,24 @@ const dummyUsers: User[] = [
     department: "Computer Science",
     graduationYear: "2023",
   },
-];
+]
 
 const internships: Internship[] = [
   {
     id: "1",
     company: "Airbus",
     location: "Toulouse, France",
-    subject:
-      "Development of a machine learning algorithm for aircraft maintenance prediction",
+    subject: "Développement d'un algorithme d'apprentissage automatique pour la prédiction de maintenance d'aéronefs",
     missions:
-      "Develop and implement ML models to predict maintenance needs based on sensor data.\n\n- Analyze historical maintenance data and identify patterns\n- Design and train machine learning models\n- Implement a prototype system for real-time prediction\n- Validate the model with test data\n- Document the solution and present findings to stakeholders",
+      "Développer et implémenter des modèles d'IA pour prédire les besoins de maintenance basés sur les données des capteurs.\n\n- Analyser les données historiques de maintenance et identifier des modèles\n- Concevoir et entraîner des modèles d'apprentissage automatique\n- Implémenter un système prototype pour la prédiction en temps réel\n- Valider le modèle avec des données de test\n- Documenter la solution et présenter les résultats aux parties prenantes",
     tutor: "Jean Dupont",
     duration: 6,
     year: "2023",
+    type: "3A",
     canRefer: true,
     isPublic: true,
     studentFeedback:
-      "This internship was a great learning experience. I had the opportunity to work with cutting-edge technologies and a supportive team. The company has a good work-life balance and the projects were challenging but rewarding.",
+      "Ce stage a été une excellente expérience d'apprentissage. J'ai eu l'opportunité de travailler avec des technologies de pointe et une équipe solidaire. L'entreprise a un bon équilibre travail-vie personnelle et les projets étaient stimulants mais gratifiants.",
     student: dummyUsers[0],
     createdAt: new Date("2023-01-01"),
     updatedAt: new Date("2023-01-02"),
@@ -38,17 +38,17 @@ const internships: Internship[] = [
     id: "2",
     company: "Thales",
     location: "Paris, France",
-    subject:
-      "Implementation of a secure communication protocol for IoT devices",
+    subject: "Implémentation d'un protocole de communication sécurisé pour les appareils IoT",
     missions:
-      "Design and implement a lightweight encryption protocol for resource-constrained IoT devices.\n\n- Research existing security protocols for IoT\n- Design a lightweight encryption solution\n- Implement the protocol on test devices\n- Perform security analysis and penetration testing\n- Optimize for performance on low-power devices",
+      "Concevoir et implémenter un protocole de chiffrement léger pour les appareils IoT à ressources limitées.\n\n- Rechercher les protocoles de sécurité existants pour l'IoT\n- Concevoir une solution de chiffrement légère\n- Implémenter le protocole sur des appareils de test\n- Effectuer une analyse de sécurité et des tests de pénétration\n- Optimiser les performances sur des appareils à faible consommation",
     tutor: "Marie Lefevre",
     duration: 4,
     year: "2023",
+    type: "3A",
     canRefer: false,
     isPublic: true,
     studentFeedback:
-      "Working at Thales was an excellent opportunity to apply my theoretical knowledge in a practical setting. The team was very knowledgeable and I learned a lot about security in IoT environments.",
+      "Travailler chez Thales a été une excellente opportunité d'appliquer mes connaissances théoriques dans un cadre pratique. L'équipe était très compétente et j'ai beaucoup appris sur la sécurité dans les environnements IoT.",
     student: dummyUsers[0],
     createdAt: new Date("2023-01-01"),
     updatedAt: new Date("2023-01-02"),
@@ -57,17 +57,17 @@ const internships: Internship[] = [
     id: "3",
     company: "EDF",
     location: "Lyon, France",
-    subject:
-      "Optimization of energy distribution networks using graph algorithms",
+    subject: "Optimisation des réseaux de distribution d'énergie à l'aide d'algorithmes de graphes",
     missions:
-      "Develop algorithms to optimize energy flow in distribution networks to minimize losses.\n\n- Model the energy distribution network as a graph\n- Implement various optimization algorithms\n- Analyze performance and energy savings\n- Create visualization tools for network operators\n- Document findings and recommendations",
+      "Développer des algorithmes pour optimiser le flux d'énergie dans les réseaux de distribution afin de minimiser les pertes.\n\n- Modéliser le réseau de distribution d'énergie sous forme de graphe\n- Implémenter divers algorithmes d'optimisation\n- Analyser les performances et les économies d'énergie\n- Créer des outils de visualisation pour les opérateurs de réseau\n- Documenter les résultats et les recommandations",
     tutor: "Pierre Dubois",
     duration: 5,
     year: "2022",
+    type: "2A",
     canRefer: true,
     isPublic: true,
     studentFeedback:
-      "EDF provided a stimulating environment to work on real-world energy problems. The internship gave me valuable insights into the energy sector and allowed me to apply my algorithm knowledge to practical challenges.",
+      "EDF a fourni un environnement stimulant pour travailler sur des problèmes énergétiques réels. Le stage m'a donné des informations précieuses sur le secteur de l'énergie et m'a permis d'appliquer mes connaissances en algorithmes à des défis pratiques.",
     student: dummyUsers[0],
     createdAt: new Date("2023-01-01"),
     updatedAt: new Date("2023-01-02"),
@@ -76,40 +76,22 @@ const internships: Internship[] = [
     id: "4",
     company: "Capgemini",
     location: "Bordeaux, France",
-    subject: "Development of a web application for project management",
+    subject: "Développement d'une application web pour la gestion de projets",
     missions:
-      "Design and implement a full-stack web application for internal project management.\n\n- Gather requirements from stakeholders\n- Design the database schema and API\n- Implement the frontend using React\n- Develop backend services with Node.js\n- Deploy and test the application",
+      "Concevoir et implémenter une application web full-stack pour la gestion de projets internes.\n\n- Recueillir les besoins des parties prenantes\n- Concevoir le schéma de base de données et l'API\n- Implémenter le frontend avec React\n- Développer des services backend avec Node.js\n- Déployer et tester l'application",
     tutor: "Luc Moreau",
     duration: 3,
     year: "2023",
+    type: "1A",
     canRefer: true,
     isPublic: true,
     studentFeedback:
-      "The internship at Capgemini was very hands-on. I was given significant responsibility and was able to contribute meaningfully to the project. The team was supportive and I improved my full-stack development skills considerably.",
+      "Le stage chez Capgemini était très pratique. On m'a confié des responsabilités importantes et j'ai pu contribuer de manière significative au projet. L'équipe était solidaire et j'ai considérablement amélioré mes compétences en développement full-stack.",
     student: dummyUsers[0],
     createdAt: new Date("2023-01-01"),
     updatedAt: new Date("2023-01-02"),
   },
-  /*
-  {
-    id: "5",
-    company: "Orange",
-    location: "Paris, France",
-    subject: "Development of a 5G network optimization tool",
-    missions:
-      "Create a tool to analyze and optimize 5G network performance.\n\n- Collect and analyze network performance data\n- Develop algorithms for network optimization\n- Create a dashboard for visualizing network metrics\n- Test the tool in a simulated environment\n- Document the solution and provide training materials",
-    tutor: "Philippe Martin",
-    duration: 5,
-    year: "2023",
-    canRefer: true,
-    isPublic: true,
-    studentFeedback:
-      "The internship at Orange was a great opportunity to work with the latest telecommunications technology. I learned a lot about 5G networks and gained valuable experience in network optimization and data analysis.",
-    student: dummyUsers[0],
-    createdAt: new Date("2023-01-01"),
-    updatedAt: new Date("2023-01-02"),
-    },*/
-];
+]
 
 export function DummyInternships() {
   return (
@@ -130,5 +112,6 @@ export function DummyInternships() {
         </Button>
       </div>
     </div>
-  );
+  )
 }
+

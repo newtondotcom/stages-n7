@@ -14,6 +14,7 @@ export function InternshipFilters() {
   const searchParams = useSearchParams()
 
   const [year, setYear] = useState<string>(searchParams.get("year") || "")
+  const [type, setType] = useState<string>(searchParams.get("type") || "")
   const [duration, setDuration] = useState<number[]>([
     Number.parseInt(searchParams.get("minDuration") || "1"),
     Number.parseInt(searchParams.get("maxDuration") || "6"),
@@ -27,6 +28,12 @@ export function InternshipFilters() {
       params.set("year", year)
     } else {
       params.delete("year")
+    }
+
+    if (type) {
+      params.set("type", type)
+    } else {
+      params.delete("type")
     }
 
     params.set("minDuration", duration[0].toString())
@@ -43,6 +50,7 @@ export function InternshipFilters() {
 
   const handleReset = () => {
     setYear("")
+    setType("")
     setDuration([1, 6])
     setCanRefer(false)
     router.push("/internships")
@@ -51,14 +59,14 @@ export function InternshipFilters() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Filters</CardTitle>
+        <CardTitle>Filtres</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="year">Academic Year</Label>
+          <Label htmlFor="year">Année académique</Label>
           <Select value={year} onValueChange={setYear}>
             <SelectTrigger id="year">
-              <SelectValue placeholder="Select year" />
+              <SelectValue placeholder="Sélectionner l'année" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="2024">2024</SelectItem>
@@ -71,25 +79,40 @@ export function InternshipFilters() {
         </div>
 
         <div className="space-y-2">
-          <Label>Duration (months)</Label>
+          <Label htmlFor="type">Type de stage</Label>
+          <Select value={type} onValueChange={setType}>
+            <SelectTrigger id="type">
+              <SelectValue placeholder="Sélectionner le type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1A">1A</SelectItem>
+              <SelectItem value="2A">2A</SelectItem>
+              <SelectItem value="3A">3A</SelectItem>
+              <SelectItem value="Césure">Césure</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-2">
+          <Label>Durée (mois)</Label>
           <Slider value={duration} min={1} max={12} step={1} onValueChange={setDuration} />
           <div className="flex justify-between text-sm text-muted-foreground">
-            <span>{duration[0]} months</span>
-            <span>{duration[1]} months</span>
+            <span>{duration[0]} mois</span>
+            <span>{duration[1]} mois</span>
           </div>
         </div>
 
         <div className="flex items-center space-x-2">
           <Checkbox id="canRefer" checked={canRefer} onCheckedChange={(checked) => setCanRefer(checked as boolean)} />
-          <Label htmlFor="canRefer">Can refer ("pistonner")</Label>
+          <Label htmlFor="canRefer">Peut pistonner</Label>
         </div>
 
         <div className="space-y-2 pt-2">
           <Button onClick={handleApplyFilters} className="w-full">
-            Apply Filters
+            Appliquer les filtres
           </Button>
           <Button onClick={handleReset} variant="outline" className="w-full">
-            Reset
+            Réinitialiser
           </Button>
         </div>
       </CardContent>

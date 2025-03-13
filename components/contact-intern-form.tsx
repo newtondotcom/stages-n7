@@ -11,7 +11,7 @@ import { contactInternshipStudent } from "@/lib/actions"
 import { toast } from "@/components/ui/use-toast"
 
 const contactFormSchema = z.object({
-  message: z.string().min(10, "Message must be at least 10 characters"),
+  message: z.string().min(10, "Le message doit comporter au moins 10 caractères"),
 })
 
 type ContactFormValues = z.infer<typeof contactFormSchema>
@@ -37,17 +37,17 @@ export function ContactInternForm({ internshipId }: ContactInternFormProps) {
       await contactInternshipStudent(internshipId, data.message)
 
       toast({
-        title: "Message sent successfully!",
-        description: "The student will be notified of your interest.",
+        title: "Message envoyé avec succès !",
+        description: "L'étudiant sera informé de votre intérêt.",
       })
 
       form.reset()
     } catch (error) {
-      console.error("Error sending message:", error)
+      console.error("Erreur lors de l'envoi du message:", error)
 
       toast({
-        title: "Something went wrong",
-        description: "Your message couldn't be sent. Please try again.",
+        title: "Une erreur est survenue",
+        description: "Votre message n'a pas pu être envoyé. Veuillez réessayer.",
         variant: "destructive",
       })
     } finally {
@@ -65,19 +65,19 @@ export function ContactInternForm({ internshipId }: ContactInternFormProps) {
             <FormItem>
               <FormControl>
                 <Textarea
-                  placeholder="Introduce yourself and explain why you're interested in this internship..."
+                  placeholder="Présentez-vous et expliquez pourquoi vous êtes intéressé par ce stage..."
                   className="min-h-[120px]"
                   {...field}
                 />
               </FormControl>
-              <FormDescription>Your ENSEEIHT email will be shared with the student.</FormDescription>
+              <FormDescription>Votre email ENSEEIHT sera partagé avec l'étudiant.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
         <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting ? "Sending..." : "Send Message"}
+          {isSubmitting ? "Envoi en cours..." : "Envoyer le message"}
         </Button>
       </form>
     </Form>

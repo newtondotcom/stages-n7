@@ -15,13 +15,16 @@ import { createInternship } from "@/lib/actions"
 import { toast } from "@/components/ui/use-toast"
 
 const internshipFormSchema = z.object({
-  company: z.string().min(2, "Company name is required"),
-  location: z.string().min(2, "Location is required"),
-  subject: z.string().min(5, "Subject is required"),
-  missions: z.string().min(10, "Please describe your missions"),
-  tutor: z.string().min(2, "Tutor name is required"),
+  company: z.string().min(2, "Le nom de l'entreprise est requis"),
+  location: z.string().min(2, "Le lieu est requis"),
+  subject: z.string().min(5, "Le sujet est requis"),
+  missions: z.string().min(10, "Veuillez décrire vos missions"),
+  tutor: z.string().min(2, "Le nom du tuteur est requis"),
   duration: z.coerce.number().min(1).max(12),
-  year: z.string().min(4, "Year is required"),
+  year: z.string().min(4, "L'année est requise"),
+  type: z.enum(["1A", "2A", "3A", "Césure"], {
+    required_error: "Le type de stage est requis",
+  }),
   canRefer: z.boolean().default(false),
   isPublic: z.boolean().default(true),
 })
@@ -42,6 +45,7 @@ export function NewInternshipForm() {
       tutor: "",
       duration: 3,
       year: new Date().getFullYear().toString(),
+      type: "3A",
       canRefer: false,
       isPublic: true,
     },
@@ -54,17 +58,17 @@ export function NewInternshipForm() {
       const result = await createInternship(data)
 
       toast({
-        title: "Internship submitted successfully!",
-        description: "Thank you for sharing your experience.",
+        title: "Stage soumis avec succès !",
+        description: "Merci d'avoir partagé votre expérience.",
       })
 
       router.push(`/internships/${result.id}`)
     } catch (error) {
-      console.error("Error submitting internship:", error)
+      console.error("Erreur lors de la soumission du stage:", error)
 
       toast({
-        title: "Something went wrong",
-        description: "Your internship couldn't be submitted. Please try again.",
+        title: "Une erreur est survenue",
+        description: "Votre stage n'a pas pu être soumis. Veuillez réessayer.",
         variant: "destructive",
       })
     } finally {
@@ -81,9 +85,9 @@ export function NewInternshipForm() {
             name="company"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Company</FormLabel>
+                <FormLabel>Entreprise</FormLabel>
                 <FormControl>
-                  <Input placeholder="Company name" {...field} />
+                  <Input placeholder="Nom de l'entreprise" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -95,9 +99,9 @@ export function NewInternshipForm() {
             name="location"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Location</FormLabel>
+                <FormLabel>Lieu</FormLabel>
                 <FormControl>
-                  <Input placeholder="City, Country" {...field} />
+                  <Input placeholder="Ville, Pays" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -110,9 +114,9 @@ export function NewInternshipForm() {
           name="subject"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Subject</FormLabel>
+              <FormLabel>Sujet</FormLabel>
               <FormControl>
-                <Input placeholder="Internship subject or title" {...field} />
+                <Input placeholder="Sujet ou titre du stage" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -127,7 +131,7 @@ export function NewInternshipForm() {
               <FormLabel>Missions</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Describe your main tasks and responsibilities"
+                  placeholder="Décrivez vos principales tâches et responsabilités"
                   className="min-h-[120px]"
                   {...field}
                 />
@@ -137,15 +141,15 @@ export function NewInternshipForm() {
           )}
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <FormField
             control={form.control}
             name="tutor"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Tutor</FormLabel>
+                <FormLabel>Tuteur</FormLabel>
                 <FormControl>
-                  <Input placeholder="Supervisor name" {...field} />
+                  <Input placeholder="Nom du superviseur" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -157,7 +161,7 @@ export function NewInternshipForm() {
             name="duration"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Duration (months)</FormLabel>
+                <FormLabel>Durée (mois)</FormLabel>
                 <FormControl>
                   <Input type="number" min={1} max={12} {...field} />
                 </FormControl>
@@ -171,11 +175,11 @@ export function NewInternshipForm() {
             name="year"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Year</FormLabel>
+                <FormLabel>Année</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select year" />
+                      <SelectValue placeholder="Sélectionner l'année" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -193,6 +197,30 @@ export function NewInternshipForm() {
               </FormItem>
             )}
           />
+
+          <FormField
+            control={form.control}
+            name="type"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Type de stage</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionner le type" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="1A">1A</SelectItem>
+                    <SelectItem value="2A">2A</SelectItem>
+                    <SelectItem value="3A">3A</SelectItem>
+                    <SelectItem value="Césure">Césure</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -202,8 +230,8 @@ export function NewInternshipForm() {
             render={({ field }) => (
               <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
-                  <FormLabel className="text-base">Can Refer ("Pistonner")</FormLabel>
-                  <FormDescription>Can you recommend new students for this internship?</FormDescription>
+                  <FormLabel className="text-base">Peut pistonner</FormLabel>
+                  <FormDescription>Pouvez-vous recommander de nouveaux étudiants pour ce stage ?</FormDescription>
                 </div>
                 <FormControl>
                   <Switch checked={field.value} onCheckedChange={field.onChange} />
@@ -218,8 +246,8 @@ export function NewInternshipForm() {
             render={({ field }) => (
               <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
-                  <FormLabel className="text-base">Make Public</FormLabel>
-                  <FormDescription>Share this internship with all ENSEEIHT students</FormDescription>
+                  <FormLabel className="text-base">Rendre public</FormLabel>
+                  <FormDescription>Partager ce stage avec tous les étudiants de l'ENSEEIHT</FormDescription>
                 </div>
                 <FormControl>
                   <Switch checked={field.value} onCheckedChange={field.onChange} />
@@ -230,7 +258,7 @@ export function NewInternshipForm() {
         </div>
 
         <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting ? "Submitting..." : "Submit Internship"}
+          {isSubmitting ? "Soumission en cours..." : "Soumettre le stage"}
         </Button>
       </form>
     </Form>

@@ -13,6 +13,7 @@ interface InternshipListProps {
   searchParams?: {
     q?: string
     year?: string
+    type?: string
     minDuration?: string
     maxDuration?: string
     canRefer?: string
@@ -25,6 +26,7 @@ export async function InternshipList({ searchParams = {} }: InternshipListProps)
   const { internships, totalPages } = await getFilteredInternships({
     query: searchParams.q,
     year: searchParams.year,
+    type: searchParams.type,
     minDuration: searchParams.minDuration ? Number.parseInt(searchParams.minDuration) : undefined,
     maxDuration: searchParams.maxDuration ? Number.parseInt(searchParams.maxDuration) : undefined,
     canRefer: searchParams.canRefer === "true",
@@ -34,8 +36,10 @@ export async function InternshipList({ searchParams = {} }: InternshipListProps)
   if (internships.length === 0) {
     return (
       <div className="text-center py-12">
-        <h3 className="text-xl font-medium mb-2">No internships found</h3>
-        <p className="text-muted-foreground">Try adjusting your search or filters to find what you're looking for.</p>
+        <h3 className="text-xl font-medium mb-2">Aucun stage trouvé</h3>
+        <p className="text-muted-foreground">
+          Essayez d'ajuster votre recherche ou vos filtres pour trouver ce que vous cherchez.
+        </p>
       </div>
     )
   }
