@@ -24,7 +24,7 @@ model User {
   authenticators Authenticator[]
 
   department     String?
-  graduationYear Int?
+  graduationYear String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

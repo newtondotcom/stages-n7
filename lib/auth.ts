@@ -1,10 +1,14 @@
 import { getServerSession, type NextAuthOptions } from "next-auth";
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import AuthentikProvider from "next-auth/providers/authentik";
-import { db } from "./db";
+import { adapter } from "@/types/adapter";
+import type {
+  GetServerSidePropsContext,
+  NextApiRequest,
+  NextApiResponse,
+} from "next";
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(db),
+  adapter: adapter,
   providers: [
     AuthentikProvider({
       clientId: process.env.AUTHENTIK_CLIENT_ID!,
@@ -19,7 +23,7 @@ export const authOptions: NextAuthOptions = {
           name: profile.fullName ?? profile.preferred_username,
           email: profile.email,
           image: profile.pictureURL,
-          graduationYear: profile.graduationYear,
+          graduationYear: profile.graduationYear.toString(),
           department: profile.major.uid,
         };
       },
@@ -37,6 +41,19 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
+  pages: {
+    signIn: "/auth/signin",
+    signOut: "/",
+    error: "/auth/error",
+  },
 };
 
-export const auth = () => getServerSession(authOptions);
+// Use it in server contexts
+export function auth(
+  ...args:
+    | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
+    | [NextApiRequest, NextApiResponse]
+    | []
+) {
+  return getServerSession(...args, authOptions);
+}
